@@ -1,9 +1,48 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
-
+import { ApplicationConfig, PLATFORM_ID, inject } from '@angular/core';
+import { provideRouter, withHashLocation } from '@angular/router';
 import { routes } from './app.routes';
-import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { 
+  IPublicClientApplication, 
+  PublicClientApplication,
+  BrowserCacheLocation
+} from '@azure/msal-browser';
+import { 
+  MSAL_INSTANCE, 
+  MsalService, 
+  MsalGuard, 
+  MsalBroadcastService
+} from '@azure/msal-angular';
+import { provideHttpClient } from '@angular/common/http';
+import { isPlatformBrowser } from '@angular/common';
+
+// Función para crear la instancia de MSAL
+export function MSALInstanceFactory(): IPublicClientApplication {
+  const platformId = inject(PLATFORM_ID);
+  const isBrowser = isPlatformBrowser(platformId);
+
+  return new PublicClientApplication({
+    auth: {
+      clientId: 'b689d414-ffd4-487b-a700-ddb43da08a85', // Reemplaza con tu Client ID de Microsoft
+      redirectUri: isBrowser ? window.location.origin : 'http://localhost:4200',
+      authority: 'https://login.microsoftonline.com/common'
+    },
+    cache: {
+      cacheLocation: BrowserCacheLocation.LocalStorage,
+      storeAuthStateInCookie: false
+    }
+  });
+}
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideClientHydration(withEventReplay())]
+  providers: [
+    provideRouter(routes, withHashLocation()),
+    provideHttpClient(),
+    {
+      provide: MSAL_INSTANCE,
+      useFactory: MSALInstanceFactory
+    },
+    MsalService,  // Añadir MsalService como proveedor
+    MsalGuard,
+    MsalBroadcastService
+  ]
 };

@@ -1,0 +1,28 @@
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  .microsoft-btn {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  
+    img {
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
+    }
+  
+    &:hover {
+      background-color: #f1f1f1;
+    }
+  }

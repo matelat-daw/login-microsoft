@@ -124,8 +124,8 @@ export class LoginComponent implements OnInit {
       })
     };
 
-    // this.http.post<any>('https://88.25.64.124/api/Account/MicrosoftLogin', { token }, httpOptions)
-    this.http.post<any>('https://localhost:7035/api/Account/MicrosoftLogin', { token }, httpOptions)
+    this.http.post<any>('https://88.25.64.124/api/Account/MicrosoftLogin', { token }, httpOptions)
+    // this.http.post<any>('https://localhost:7035/api/Account/MicrosoftLogin', { token }, httpOptions)
       .subscribe({
         next: (response) => {
           console.log('Inicio de Sesión con Microsoft Exitoso:', response);

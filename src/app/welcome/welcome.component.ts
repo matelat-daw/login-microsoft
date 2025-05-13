@@ -32,8 +32,29 @@ export class WelcomeComponent implements OnInit {
     };
   }
 
+  // ... existing code ...
+
   logout(): void {
-    this.authService.logout();
+    // Limpiar el almacenamiento local primero
+    localStorage.clear();
+    sessionStorage.clear();
+    
+    // Limpiar la caché de MSAL
+    this.authService.instance.clearCache();
+    
+    // Eliminar todas las cuentas de la sesión - método correcto
+    const accounts = this.authService.instance.getAllAccounts();
+    if (accounts.length > 0) {
+      accounts.forEach(account => {
+        this.authService.instance.logout({
+          account: account,
+          postLogoutRedirectUri: window.location.origin + '/#/login',
+          onRedirectNavigate: () => false
+        });
+      });
+    }
+    
+    // Navegar directamente a la página de login
     this.router.navigate(['/login']);
   }
 }

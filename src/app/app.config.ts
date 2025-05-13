@@ -19,12 +19,17 @@ import { isPlatformBrowser } from '@angular/common';
 export function MSALInstanceFactory(): IPublicClientApplication {
   const platformId = inject(PLATFORM_ID);
   const isBrowser = isPlatformBrowser(platformId);
+  // Determinar las URLs de redirección basadas en el entorno
+  const redirectUri = isBrowser ? window.location.origin : 'http://localhost:4200';
+  const postLogoutRedirectUri = isBrowser ? window.location.origin : 'http://localhost:4200';
 
   return new PublicClientApplication({
     auth: {
       clientId: 'b689d414-ffd4-487b-a700-ddb43da08a85', // Reemplaza con tu Client ID de Microsoft
-      redirectUri: isBrowser ? window.location.origin : 'http://localhost:4200',
-      authority: 'https://login.microsoftonline.com/common'
+      redirectUri: redirectUri,
+      authority: 'https://login.microsoftonline.com/common',
+      postLogoutRedirectUri: postLogoutRedirectUri,
+      navigateToLoginRequestUrl: true
     },
     cache: {
       cacheLocation: BrowserCacheLocation.LocalStorage,

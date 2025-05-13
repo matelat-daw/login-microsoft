@@ -32,29 +32,29 @@ export class WelcomeComponent implements OnInit {
     };
   }
 
-  // ... existing code ...
-
   logout(): void {
-    // Limpiar el almacenamiento local primero
+    // Limpiar el almacenamiento local
     localStorage.clear();
     sessionStorage.clear();
     
     // Limpiar la caché de MSAL
     this.authService.instance.clearCache();
     
-    // Eliminar todas las cuentas de la sesión - método correcto
+    // Eliminar todas las cuentas de la sesión con cierre completo
     const accounts = this.authService.instance.getAllAccounts();
     if (accounts.length > 0) {
-      accounts.forEach(account => {
-        this.authService.instance.logout({
-          account: account,
-          postLogoutRedirectUri: window.location.origin + '/#/login',
-          onRedirectNavigate: () => false
-        });
+      // Usar logoutRedirect para forzar el cierre de sesión también en Microsoft
+      this.authService.logoutRedirect({
+        account: accounts[0],
+        postLogoutRedirectUri: window.location.origin + '/#/login',
+        // Permitir la redirección a Microsoft para cerrar sesión completamente
+        onRedirectNavigate: (url) => {
+          return true;
+        }
       });
+    } else {
+      // Si no hay cuentas, simplemente navegar a login
+      this.router.navigate(['/login']);
     }
-    
-    // Navegar directamente a la página de login
-    this.router.navigate(['/login']);
   }
 }

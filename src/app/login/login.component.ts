@@ -144,7 +144,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     // Usar la URL de la API local para desarrollo
     // const apiUrl = 'https://localhost:7035/api/Account/MicrosoftLogin';
     // Descomentar para producción
-    const apiUrl = 'https://88.25.64.124/api/Account/MicrosoftLogin';
+    const apiUrl = 'https://88.24.26.59/api/Account/MicrosoftLogin';
 
     this.http.post<any>(apiUrl, { token }, httpOptions)
       .pipe(takeUntil(this.destroying$))

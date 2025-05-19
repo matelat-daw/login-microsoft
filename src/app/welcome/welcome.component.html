@@ -1,5 +1,7 @@
-<div class="welcome-container" *ngIf="userInfo">
+@if (userInfo) {
+  <div class="welcome-container">
     <h2>¡Bienvenido, {{userInfo.name}}!</h2>
     <p>Email: {{userInfo.username}}</p>
     <button (click)="logout()" class="logout-btn">Cerrar sesión</button>
   </div>
+}
